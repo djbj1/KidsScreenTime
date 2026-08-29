@@ -599,17 +599,26 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .timeline-item {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 12px;
-  padding: 12px;
+  padding: 10px 12px;
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
   font-size: 0.82rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .timeline-badge {
@@ -629,6 +638,11 @@ body {
 
 .timeline-details {
   flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .timeline-time {
@@ -636,11 +650,14 @@ body {
   color: var(--text-muted);
   font-weight: 600;
   margin-bottom: 2px;
+  word-break: break-word;
 }
 
 .timeline-text {
   font-weight: 500;
   line-height: 1.35;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 /* Modal Overlay */

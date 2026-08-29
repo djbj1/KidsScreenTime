@@ -540,7 +540,7 @@ export default function ParentControlCenter({
       </div>
 
       {/* Left Column: Managed Child Switcher, Editable Table, Bank */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box' }}>
         {/* Child Selector */}
         <div>
           <div className="section-title">Verwaltetes Kind auswählen</div>
@@ -752,7 +752,7 @@ export default function ParentControlCenter({
       )}
 
       {/* Right Column: Master Data Management & Audit Protocol Log */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box' }}>
         {/* Master Data & Device Management */}
         <div className="parent-controls">
           <div className="section-title">⚙️ Kinder & Geräte verwalten</div>
@@ -1077,7 +1077,7 @@ export default function ParentControlCenter({
                           {clog.message}
                         </div>
                         {clog.details && clog.details !== 'null' && (
-                          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'monospace', marginTop: '2px' }}>
+                          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'monospace', marginTop: '2px', wordBreak: 'break-all', overflowWrap: 'anywhere', whiteSpace: 'pre-wrap', maxWidth: '100%' }}>
                             {clog.details}
                           </div>
                         )}
