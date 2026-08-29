@@ -1,0 +1,24 @@
+{
+  "name": "screentime-cockpit",
+  "version": "1.0.0",
+  "description": "Single-Server ScreenTime Cockpit with SQLite, Express, and Vite/React Dashboard",
+  "main": "server/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "build:client": "cd client && npm run build"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/local-notifications": "^7.0.7",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
+    "nodemon": "^3.1.0"
+  }
+}

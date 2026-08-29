@@ -1,0 +1,11 @@
+node_modules/
+client/node_modules/
+client/dist/
+android/.gradle/
+android/build/
+android/app/build/
+android/.idea/
+android/local.properties
+android/captures/
+*.log
+screentime.db-journal

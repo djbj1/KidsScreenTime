@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScreenTime Cockpit - Design Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0f1117;
+      --card-bg: #181a22;
+      --card-border: #282b37;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #6366f1;
+      --accent-blue-hover: #4f46e5;
+      --accent-yellow: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-green: #10b981;
+      --accent-gold: #fbbf24;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      background-color: #12141c;
+      border-radius: 32px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(99, 102, 241, 0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 780px;
+      position: relative;
+      transition: max-width 0.3s ease;
+    }
+
+    /* Desktop / Tablet Dashboard Layout */
+    @media (min-width: 768px) {
+      body {
+        padding: 2rem;
+      }
+      
+      .app-container {
+        max-width: 1080px;
+        min-height: 720px;
+        border-radius: 24px;
+      }
+
+      .content-area {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+
+      .grid-span-full {
+        grid-column: 1 / -1;
+      }
+    }
+
+    /* Top Navigation Tabs */
+    .nav-bar {
+      display: flex;
+      background: #181a24;
+      padding: 6px;
+      border-bottom: 1px solid var(--card-border);
+      gap: 6px;
+    }
+
+    .nav-tab {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .nav-tab.active {
+      background: var(--accent-blue);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+    }
+
+    /* Main Content Area */
+    .content-area {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Header Profile & Savings */
+    .profile-card {
+      background: linear-gradient(135deg, #1e2230 0%, #161824 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar-circle {
+      width: 44px;
+      height: 44px;
+      background: radial-gradient(circle, #6366f1 0%, #4338ca 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+    }
+
+    .profile-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .profile-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .savings-badge {
+      text-align: right;
+    }
+
+    .savings-title {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .savings-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+
+    /* Main Circular Timer */
+    .timer-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+      position: relative;
+    }
+
+    .timer-svg-container {
+      position: relative;
+      width: 220px;
+      height: 220px;
+    }
+
+    .timer-svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .timer-circle-bg {
+      fill: none;
+      stroke: #1e2230;
+      stroke-width: 8;
+    }
+
+    .timer-circle-progress {
+      fill: none;
+      stroke: var(--accent-blue);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 565;
+      stroke-dashoffset: 140;
+      transition: stroke-dashoffset 0.5s ease, stroke 0.3s ease;
+      filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.6));
+    }
+
+    .timer-circle-progress.warning {
+      stroke: var(--accent-yellow);
+      filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.6));
+    }
+
+    .timer-circle-progress.alarm {
+      stroke: var(--accent-red);
+      filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.8));
+    }
+
+    .timer-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer-device-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .timer-digits {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin: 4px 0;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .timer-bell {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    /* Pill Buttons */
+    .action-pills {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .pill-btn {
+      padding: 10px 18px;
+      border-radius: 30px;
+      border: 1px solid var(--card-border);
+      background: #1c1f2c;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-btn:hover {
+      background: #25293b;
+      transform: translateY(-1px);
+    }
+
+    .pill-btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .pill-btn-danger:hover {
+      background: var(--accent-red);
+      color: #fff;
+    }
+
+    /* Device Selector Cards */
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .devices-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .device-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .device-card:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+    }
+
+    .device-card.active {
+      border-color: var(--accent-blue);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(24, 26, 34, 1) 100%);
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
+    }
+
+    .device-icon {
+      font-size: 1.5rem;
+    }
+
+    .device-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .device-status {
+      font-size: 0.72rem;
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+
+    /* Parent Section Controls */
+    .parent-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .quick-adj-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-quick {
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+      background: #1c202e;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-quick-plus {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: #6ee7b7;
+    }
+
+    .btn-quick-minus {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #fde68a;
+    }
+
+    .btn-quick:hover {
+      transform: scale(1.02);
+    }
+
+    /* Timeline Audit Log */
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .timeline-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.82rem;
+    }
+
+    .timeline-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .badge-parent {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--accent-gold);
+    }
+
+    .badge-child {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent-blue);
+    }
+
+    .badge-system {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--accent-red);
+    }
+
+    .timeline-details {
+      flex: 1;
+    }
+
+    .timeline-time {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .timeline-text {
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    /* PIN Modal */
+    .pin-modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(10, 11, 16, 0.92);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 100;
+      transition: opacity 0.3s ease;
+    }
+
+    .pin-modal-overlay.hidden {
+      display: none;
+    }
+
+    .pin-box {
+      width: 100%;
+      max-width: 300px;
+      text-align: center;
+    }
+
+    .pin-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .pin-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .pin-dots {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .pin-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid var(--card-border);
+      background: transparent;
+      transition: all 0.2s ease;
+    }
+
+    .pin-dot.filled {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 10px var(--accent-blue);
+    }
+
+    .pin-pad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .pin-key {
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .pin-key:active {
+      background: var(--accent-blue);
+    }
+
+    /* Weekly Table Styles */
+    .weekly-table-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .weekly-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+
+    .weekly-table th {
+      background: #141620;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 10px 12px;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .weekly-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #e2e8f0;
+    }
+
+    .weekly-table tr.highlight-row {
+      background: rgba(99, 102, 241, 0.08);
+    }
+
+    .day-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: #252836;
+      font-weight: 700;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-right: 4px;
+    }
+
+    .day-badge.active {
+      background: var(--accent-blue);
+      color: #fff;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+
+    .status-dot.green {
+      background: var(--accent-green);
+    }
+
+    .status-dot.blue {
+      background: var(--accent-blue);
+      box-shadow: 0 0 6px var(--accent-blue);
+    }
+
+    .status-dot.gray {
+      background: #475569;
+    }
+
+    .weekly-summary-footer {
+      padding: 12px 14px;
+      background: #141620;
+      border-top: 1px solid var(--card-border);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .progress-bar-bg {
+      height: 6px;
+      background: #282c3d;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-green) 100%);
+      border-radius: 4px;
+    }
+
+    .btn-table-edit {
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: #1c202e;
+      color: #94a3b8;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-table-edit:hover {
+      background: var(--accent-blue);
+      color: #fff;
+      border-color: var(--accent-blue);
+    }
+    /* Child Selector Pills */
+    .child-selector-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .child-chip {
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .child-chip.active {
+      background: rgba(99, 102, 241, 0.18);
+      border-color: var(--accent-blue);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(99, 102, 241, 0.25);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app-container">
+
+    <!-- Navigation Tabs -->
+    <div class="nav-bar">
+      <button class="nav-tab active" id="tabChild" onclick="switchTab('child')">
+        <span>🎮</span> Kind-Ansicht
+      </button>
+      <button class="nav-tab" id="tabParent" onclick="switchTab('parent')">
+        <span>🛡️</span> Eltern-Bereich
+      </button>
+    </div>
+
+    <!-- Child View Content -->
+  <div class="content-area" id="viewChild">
+    
+    <!-- Child Selector Pills -->
+    <div>
+      <div class="section-title">Kind auswählen</div>
+      <div class="child-selector-bar">
+        <button class="child-chip active" onclick="switchChild('Lukas', 245, '👦')">
+          <span>👦</span> Lukas
+        </button>
+        <button class="child-chip" onclick="switchChild('Sophie', 180, '👧')">
+          <span>👧</span> Sophie
+        </button>
+      </div>
+    </div>
+
+    <!-- Profile & Savings Account -->
+    <div class="profile-card">
+      <div class="profile-info">
+        <div class="avatar-circle" id="currentChildAvatar">👦</div>
+        <div>
+          <div class="profile-name" id="currentChildName">Lukas</div>
+          <div class="profile-subtitle">Wochen-Guthaben</div>
+        </div>
+      </div>
+      <div class="savings-badge">
+        <div class="savings-title">Sparbuch</div>
+        <div class="savings-value">
+          <span id="currentChildBalance">245</span> <span style="font-size:0.85rem">Min</span> 🐷
+        </div>
+      </div>
+    </div>
+
+      <!-- Circular Timer Display -->
+      <div class="timer-section">
+        <div class="timer-svg-container">
+          <svg class="timer-svg" viewBox="0 0 200 200">
+            <circle class="timer-circle-bg" cx="100" cy="100" r="90" />
+            <circle class="timer-circle-progress" id="timerProgress" cx="100" cy="100" r="90" />
+          </svg>
+          <div class="timer-content">
+            <div class="timer-device-label" id="timerDeviceLabel">PlayStation 5</div>
+            <div class="timer-digits" id="timerDigits">09:40</div>
+            <div class="timer-bell">
+              🔔 Endzeit: <span id="timerEndTime" style="font-weight:700">11:46</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timer Control Pills -->
+      <div class="action-pills">
+        <button class="pill-btn" onclick="togglePause()">
+          <span id="pauseIcon">⏸️</span> <span id="pauseLabel">Pause</span>
+        </button>
+        <button class="pill-btn pill-btn-danger" onclick="cancelTimer()">
+          🛑 Stoppen
+        </button>
+      </div>
+
+      <!-- Weekly Overview Table (Wochenübersicht - Kind-Ansicht: Nur Lesen) -->
+      <div>
+        <div class="section-title">📊 Wochenübersicht (Wann & Wieviel)</div>
+        <div class="weekly-table-card">
+          <table class="weekly-table">
+            <thead>
+              <tr>
+                <th>Tag</th>
+                <th>Gerät</th>
+                <th>Dauer</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="day-badge">So</span> 24.08.</td>
+                <td>-</td>
+                <td><span style="color:var(--text-muted)">0 Min</span></td>
+                <td><span class="status-dot gray"></span> Spielfrei</td>
+              </tr>
+              <tr class="highlight-row">
+                <td><span class="day-badge active">Sa</span> 23.08. (Heute)</td>
+                <td>PlayStation 5</td>
+                <td><b style="color:var(--accent-blue)">45 Min</b></td>
+                <td><span class="status-dot blue"></span> Aktiv</td>
+              </tr>
+              <tr>
+                <td><span class="day-badge">Fr</span> 22.08.</td>
+                <td>Laptop</td>
+                <td><b>45 Min</b></td>
+                <td><span class="status-dot green"></span> Verbraucht</td>
+              </tr>
+              <tr>
+                <td><span class="day-badge">Do</span> 21.08.</td>
+                <td>PlayStation 5</td>
+                <td><b>60 Min</b></td>
+                <td><span class="status-dot green"></span> Verbraucht</td>
+              </tr>
+              <tr>
+                <td><span class="day-badge">Mi</span> 20.08.</td>
+                <td>-</td>
+                <td><span style="color:var(--text-muted)">0 Min</span></td>
+                <td><span class="status-dot gray"></span> Spielfrei</td>
+              </tr>
+              <tr>
+                <td><span class="day-badge">Di</span> 19.08.</td>
+                <td>Laptop</td>
+                <td><b>30 Min</b></td>
+                <td><span class="status-dot green"></span> Verbraucht</td>
+              </tr>
+              <tr>
+                <td><span class="day-badge">Mo</span> 18.08.</td>
+                <td>PlayStation 5</td>
+                <td><b>45 Min</b></td>
+                <td><span class="status-dot green"></span> Verbraucht</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="weekly-summary-footer">
+            <div>Wochenverbrauch: <b>225 Min</b> / 470 Min Guthaben</div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: 48%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Device Selection -->
+      <div>
+        <div class="section-title">Geräte auswählen & starten</div>
+        <div class="devices-grid">
+          <div class="device-card active">
+            <div class="device-icon">🎮</div>
+            <div class="device-name">PlayStation 5</div>
+            <div class="device-status">● Läuft gerade</div>
+          </div>
+          <div class="device-card" onclick="alert('Demo: PlayStation 5 läuft bereits')">
+            <div class="device-icon">💻</div>
+            <div class="device-name">Laptop</div>
+            <div class="device-status" style="color:var(--text-muted)">Bereit</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Parent View Content -->
+    <div class="content-area" id="viewParent" style="display: none;">
+
+      <div class="profile-card grid-span-full"
+        style="background: linear-gradient(135deg, #2d2011 0%, #181a24 100%); border-color: rgba(251, 191, 36, 0.3);">
+        <div class="profile-info">
+          <div class="avatar-circle"
+            style="background: radial-gradient(circle, #f59e0b 0%, #b45309 100%); box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);">
+            🛡️</div>
+          <div>
+            <div class="profile-name">Eltern-Kontrollzentrum</div>
+            <div class="profile-subtitle">Direkte Zeitkorrektur pro Kind & Tag</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Parent Left Column: Child Selector, Editable Table & Bank -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <!-- Parent Child Switcher -->
+        <div>
+          <div class="section-title">Verwaltetes Kind auswählen</div>
+          <div class="child-selector-bar">
+            <button class="child-chip active" id="parentChipLukas" onclick="switchParentChild('Lukas')">
+              <span>👦</span> Lukas
+            </button>
+            <button class="child-chip" id="parentChipSophie" onclick="switchParentChild('Sophie')">
+              <span>👧</span> Sophie
+            </button>
+          </div>
+        </div>
+
+        <!-- Parent Editable Weekly Overview Table for Child -->
+        <div>
+          <div class="section-title">📊 Wochenübersicht & Korrektur: <span id="parentSelectedChildName">Lukas</span></div>
+          <div class="weekly-table-card">
+            <table class="weekly-table">
+              <thead>
+                <tr>
+                  <th>Tag</th>
+                  <th>Gerät</th>
+                  <th>Dauer</th>
+                  <th>Aktion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="day-badge">So</span> 24.08.</td>
+                  <td>-</td>
+                  <td><span style="color:var(--text-muted)">0 Min</span></td>
+                  <td><button class="btn-table-edit" onclick="editDayTime('So 24.08.', 0)">✏️ Korrigieren</button></td>
+                </tr>
+                <tr class="highlight-row">
+                  <td><span class="day-badge active">Sa</span> 23.08. (Heute)</td>
+                  <td>PlayStation 5</td>
+                  <td><b style="color:var(--accent-blue)">45 Min</b></td>
+                  <td><button class="btn-table-edit" onclick="editDayTime('Sa 23.08.', 45)">✏️ Korrigieren</button></td>
+                </tr>
+                <tr>
+                  <td><span class="day-badge">Fr</span> 22.08.</td>
+                  <td>Laptop</td>
+                  <td><b>45 Min</b></td>
+                  <td><button class="btn-table-edit" onclick="editDayTime('Fr 22.08.', 45)">✏️ Korrigieren</button></td>
+                </tr>
+                <tr>
+                  <td><span class="day-badge">Do</span> 21.08.</td>
+                  <td>PlayStation 5</td>
+                  <td><b>60 Min</b></td>
+                  <td><button class="btn-table-edit" onclick="editDayTime('Do 21.08.', 60)">✏️ Korrigieren</button></td>
+                </tr>
+                <tr>
+                  <td><span class="day-badge">Mi</span> 20.08.</td>
+                  <td>-</td>
+                  <td><span style="color:var(--text-muted)">0 Min</span></td>
+                  <td><button class="btn-table-edit" onclick="editDayTime('Mi 20.08.', 0)">✏️ Korrigieren</button></td>
+                </tr>
+                <tr>
+                  <td><span class="day-badge">Di</span> 19.08.</td>
+                  <td>Laptop</td>
+                  <td><b>30 Min</b></td>
+                  <td><button class="btn-table-edit" onclick="editDayTime('Di 19.08.', 30)">✏️ Korrigieren</button></td>
+                </tr>
+                <tr>
+                  <td><span class="day-badge">Mo</span> 18.08.</td>
+                  <td>PlayStation 5</td>
+                  <td><b>45 Min</b></td>
+                  <td><button class="btn-table-edit" onclick="editDayTime('Mo 18.08.', 45)">✏️ Korrigieren</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Bank Function -->
+        <div class="parent-controls">
+          <div class="section-title">🏦 Bank-Funktion (Kontostand korrigieren)</div>
+          <div class="quick-adj-grid">
+            <button class="btn-quick"
+              style="background: rgba(16, 185, 129, 0.15); color:#6ee7b7; border-color: rgba(16,185,129,0.3);"
+              onclick="addBonus()">
+              🎁 +30 Min Gutschrift
+            </button>
+            <button class="btn-quick"
+              style="background: rgba(239, 68, 68, 0.15); color:#fca5a5; border-color: rgba(239,68,68,0.3);"
+              onclick="deductBonus()">
+              💸 -30 Min Korrektur/Abzug
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Parent Right Column: Settings & Audit Protocol -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <!-- Stammdaten & Geräte-Verwaltung -->
+        <div class="parent-controls">
+          <div class="section-title">⚙️ Kinder & Geräte verwalten</div>
+          <div
+            style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 12px;">
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 10px;">
+              <div>
+                <div style="font-weight:700; font-size:0.9rem;">👦 Lukas</div>
+                <div style="font-size:0.75rem; color:var(--text-muted)">Basis-Budget: 300 Min/Woche</div>
+              </div>
+              <button class="pill-btn" style="padding:6px 12px; font-size:0.75rem"
+                onclick="alert('Demo: Name / Budget bearbeiten')">✏️ Bearbeiten</button>
+            </div>
+
+            <div style="font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-top:4px">Zugeordnete Geräte:
+            </div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div
+                style="display:flex; justify-content:space-between; align-items:center; background:#141620; padding:8px 12px; border-radius:10px; font-size:0.8rem;">
+                <span>🎮 PlayStation 5</span>
+                <span style="color:var(--accent-green)">Aktiv</span>
+              </div>
+              <div
+                style="display:flex; justify-content:space-between; align-items:center; background:#141620; padding:8px 12px; border-radius:10px; font-size:0.8rem;">
+                <span>💻 Laptop</span>
+                <span style="color:var(--text-muted)">Bereit</span>
+              </div>
+            </div>
+
+            <button class="btn-quick" style="margin-top:6px; font-size:0.8rem; padding:10px"
+              onclick="alert('Demo: Neues Gerät oder Kind hinzufügen')">
+              ➕ Neues Gerät oder Kind hinzufügen
+            </button>
+          </div>
+        </div>
+
+        <!-- Audit Protocol Log -->
+        <div>
+          <div class="section-title">Revisionssicheres Audit-Protokoll</div>
+          <div class="timeline-list">
+            <div class="timeline-item">
+              <div class="timeline-badge badge-parent">🛡️</div>
+              <div class="timeline-details">
+                <div class="timeline-time">Heute | 11:36 Uhr</div>
+                <div class="timeline-text">Vater hat einen Timer für <b>Lukas (PlayStation)</b> gestartet (Dauer: 45 Min).
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-badge badge-child">👤</div>
+              <div class="timeline-details">
+                <div class="timeline-time">Gestern | 16:15 Uhr</div>
+                <div class="timeline-text">Lukas hat 30 Min auf <b>Laptop</b> gespielt.</div>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-badge badge-system">🔴</div>
+              <div class="timeline-details">
+                <div class="timeline-time">Gestern | 16:45 Uhr</div>
+                <div class="timeline-text">SYSTEM hat die Sitzung von <b>Lukas (Laptop)</b> beendet. Grund: Zeit
+                  abgelaufen.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PIN Modal -->
+    <div class="pin-modal-overlay hidden" id="pinModal">
+      <div class="pin-box">
+        <div class="pin-title">🛡️ PIN erforderlich</div>
+        <div class="pin-subtitle">Bitte geben Sie die 4-stellige Eltern-PIN ein (Standard: 1234)</div>
+
+        <div class="pin-dots">
+          <div class="pin-dot" id="dot0"></div>
+          <div class="pin-dot" id="dot1"></div>
+          <div class="pin-dot" id="dot2"></div>
+          <div class="pin-dot" id="dot3"></div>
+        </div>
+
+        <div class="pin-pad">
+          <button class="pin-key" onclick="pressPin('1')">1</button>
+          <button class="pin-key" onclick="pressPin('2')">2</button>
+          <button class="pin-key" onclick="pressPin('3')">3</button>
+          <button class="pin-key" onclick="pressPin('4')">4</button>
+          <button class="pin-key" onclick="pressPin('5')">5</button>
+          <button class="pin-key" onclick="pressPin('6')">6</button>
+          <button class="pin-key" onclick="pressPin('7')">7</button>
+          <button class="pin-key" onclick="pressPin('8')">8</button>
+          <button class="pin-key" onclick="pressPin('9')">9</button>
+          <button class="pin-key" style="grid-column: 2" onclick="pressPin('0')">0</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let secondsRemaining = 580; // 9:40
+    let isPaused = false;
+    let pinEntered = "";
+    const correctPin = "1234";
+
+    // Circular timer animation logic
+    const timerProgress = document.getElementById("timerProgress");
+    const timerDigits = document.getElementById("timerDigits");
+    const maxSeconds = 2700; // 45 min total session
+
+    function updateTimerUI() {
+      const mins = Math.floor(secondsRemaining / 60);
+      const secs = secondsRemaining % 60;
+      timerDigits.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+      // SVG dash offset calculation (565 is full circumference)
+      const progressFraction = secondsRemaining / maxSeconds;
+      const offset = 565 * (1 - progressFraction);
+      timerProgress.style.strokeDashoffset = offset;
+
+      // Color transition: Yellow if <= 10 mins (600s), Red if 0s
+      if (secondsRemaining <= 0) {
+        timerProgress.className.baseVal = "timer-circle-progress alarm";
+      } else if (secondsRemaining <= 600) {
+        timerProgress.className.baseVal = "timer-circle-progress warning";
+      } else {
+        timerProgress.className.baseVal = "timer-circle-progress";
+      }
+    }
+
+    // Live timer interval
+    setInterval(() => {
+      if (!isPaused && secondsRemaining > 0) {
+        secondsRemaining--;
+        updateTimerUI();
+      }
+    }, 1000);
+
+    function togglePause() {
+      isPaused = !isPaused;
+      document.getElementById("pauseLabel").innerText = isPaused ? "Fortsetzen" : "Pause";
+      document.getElementById("pauseIcon").innerText = isPaused ? "▶️" : "⏸️";
+    }
+
+    function cancelTimer() {
+      if (confirm("Möchtest du die Sitzung wirklich vorzeitig beenden?")) {
+        secondsRemaining = 0;
+        updateTimerUI();
+      }
+    }
+
+    function adjustTime(mins) {
+      secondsRemaining = Math.max(0, secondsRemaining + mins * 60);
+      updateTimerUI();
+      alert(`Zeit um ${mins > 0 ? '+' : ''}${mins} Minuten angepasst!`);
+    }
+
+    function addBonus() {
+      alert("🎁 +30 Minuten Bonus für Lukas verbucht!");
+    }
+
+    function deductBonus() {
+      alert("💸 -30 Minuten vom Sparbuch abgezogen.");
+    }
+
+    // Tab switching & PIN Protection
+    function switchTab(tab) {
+      if (tab === 'parent') {
+        document.getElementById("pinModal").classList.remove("hidden");
+        pinEntered = "";
+        updatePinDots();
+      } else {
+        document.getElementById("tabChild").classList.add("active");
+        document.getElementById("tabParent").classList.remove("active");
+        document.getElementById("viewChild").style.display = "flex";
+        document.getElementById("viewParent").style.display = "none";
+      }
+    }
+
+    function pressPin(num) {
+      if (pinEntered.length < 4) {
+        pinEntered += num;
+        updatePinDots();
+        if (pinEntered.length === 4) {
+          setTimeout(() => {
+            if (pinEntered === correctPin) {
+              document.getElementById("pinModal").classList.add("hidden");
+              document.getElementById("tabParent").classList.add("active");
+              document.getElementById("tabChild").classList.remove("active");
+              document.getElementById("viewParent").style.display = "flex";
+              document.getElementById("viewChild").style.display = "none";
+            } else {
+              alert("Falsche PIN! Versuche 1234");
+              pinEntered = "";
+              updatePinDots();
+            }
+          }, 100);
+        }
+      }
+    }
+
+    function updatePinDots() {
+      for (let i = 0; i < 4; i++) {
+        const dot = document.getElementById(`dot${i}`);
+        if (i < pinEntered.length) {
+          dot.classList.add("filled");
+        } else {
+          dot.classList.remove("filled");
+        }
+      }
+    }
+
+    function editDayTime(dayLabel, currentMins) {
+      const newMins = prompt(`Zeit für ${dayLabel} korrigieren (in Minuten):`, currentMins);
+      if (newMins !== null && !isNaN(newMins) && newMins.trim() !== "") {
+        alert(`✅ Zeit für ${dayLabel} wurde von ${currentMins} Min auf ${newMins} Min korrigiert! Das Wochen-Sparbuch wurde automatisch angepasst.`);
+      }
+    }
+
+    function switchChild(name, balance, avatar) {
+      document.getElementById("currentChildName").innerText = name;
+      document.getElementById("currentChildBalance").innerText = balance;
+      document.getElementById("currentChildAvatar").innerText = avatar;
+      
+      // Toggle active chips
+      document.querySelectorAll('#viewChild .child-chip').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText.includes(name));
+      });
+    }
+
+    function switchParentChild(name) {
+      document.getElementById("parentSelectedChildName").innerText = name;
+      document.getElementById("parentChipLukas").classList.toggle('active', name === 'Lukas');
+      document.getElementById("parentChipSophie").classList.toggle('active', name === 'Sophie');
+    }
+
+    updateTimerUI();
+  </script>
+</body>
+
+</html>
