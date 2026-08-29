@@ -10,6 +10,26 @@
 
 ---
 
+## 📸 Screenshots & Ansichten
+
+### 📱 Smartphone-Ansichten (Mobile App)
+
+| 👦 Kinder-Dashboard (Timer & Guthaben) | 🛡️ Eltern-Kontrollzentrum (Live-Monitor & Korrektur) |
+| :---: | :---: |
+| <img src="doc/images/mobile_child_view.jpg" alt="Kinder-Dashboard Smartphone" width="340" /> | <img src="doc/images/mobile_parent_view.jpg" alt="Eltern-Kontrollzentrum Smartphone" width="340" /> |
+
+### 💻 Multi-Device & Desktop-Ansichten
+
+<p align="center">
+  <img src="doc/images/multi_device_overview.jpg" alt="KidsScreenTime Multi-Device Übersicht" width="90%" />
+</p>
+
+| 💻 Kinder-Cockpit (Notebook / Tablet) | 🛡️ Eltern-Zentrale (Desktop / Browser) |
+| :---: | :---: |
+| <img src="doc/images/child_dashboard_laptop.jpg" alt="Kinder-Dashboard Desktop" width="460" /> | <img src="doc/images/parent_control_desktop.jpg" alt="Eltern-Zentrale Desktop" width="460" /> |
+
+---
+
 ## ✨ Highlights & Features
 
 ### 👦 1. Kindgerechtes Dashboard (Kinder-Cockpit)
