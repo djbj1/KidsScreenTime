@@ -340,46 +340,54 @@ export default function ParentControlCenter({
         className="profile-card grid-span-full"
         style={{
           background: 'linear-gradient(135deg, #2d2011 0%, #181a24 100%)',
-          borderColor: 'rgba(251, 191, 36, 0.3)'
+          borderColor: 'rgba(251, 191, 36, 0.3)',
+          flexDirection: 'column',
+          alignItems: 'stretch',
+          gap: '12px',
+          padding: '12px 10px'
         }}
       >
-        <div className="profile-info" style={{ width: '100%', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div
-              className="avatar-circle"
-              style={{
-                background: 'radial-gradient(circle, #f59e0b 0%, #b45309 100%)',
-                boxShadow: '0 4px 10px rgba(245, 158, 11, 0.4)'
-              }}
-            >
-              🛡️
-            </div>
-            <div>
-              <div className="profile-name">Eltern-Kontrollzentrum</div>
-              <div className="profile-subtitle">Direkte Korrektur von Zeit, Namen & Geräten</div>
-            </div>
-          </div>
-
-          <a
-            href="/screentime.apk"
-            download="screentime.apk"
-            className="pill-btn"
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div
+            className="avatar-circle"
             style={{
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-              color: '#fff',
-              textDecoration: 'none',
-              fontWeight: 700,
-              fontSize: '0.85rem',
-              padding: '10px 18px',
-              boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px'
+              width: '42px',
+              height: '42px',
+              fontSize: '1.3rem',
+              background: 'radial-gradient(circle, #f59e0b 0%, #b45309 100%)',
+              boxShadow: '0 4px 10px rgba(245, 158, 11, 0.4)'
             }}
           >
-            📱 Android App (.APK) herunterladen
-          </a>
+            🛡️
+          </div>
+          <div>
+            <div className="profile-name" style={{ fontSize: '1.15rem', fontWeight: 800 }}>Eltern-Kontrollzentrum</div>
+            <div className="profile-subtitle">Direkte Korrektur von Zeit, Namen & Geräten</div>
+          </div>
         </div>
+
+        <a
+          href="/screentime.apk"
+          download="screentime.apk"
+          className="pill-btn"
+          style={{
+            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+            color: '#fff',
+            textDecoration: 'none',
+            fontWeight: 700,
+            fontSize: '0.8rem',
+            padding: '8px 12px',
+            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '6px',
+            width: '100%',
+            boxSizing: 'border-box'
+          }}
+        >
+          📱 Android App (.APK) herunterladen
+        </a>
       </div>
 
       {/* Live Monitor Grid for All Children */}
@@ -552,7 +560,7 @@ export default function ParentControlCenter({
         {/* Editable Weekly Table for selected child (Mo-So absteigend) */}
         <div>
           <div className="week-header-bar">
-            <div className="section-title" style={{ margin: 0 }}>📊 Wochenübersicht & Korrektur ({selectedUser.name})</div>
+            <div className="section-title" style={{ margin: 0 }}>📊 Wochenkorrektur ({selectedUser.name})</div>
             <div className="week-nav-controls">
               <button
                 className="week-nav-btn"
@@ -562,7 +570,7 @@ export default function ParentControlCenter({
                 ◀
               </button>
               <span className="week-kw-badge">
-                {weeklySummary ? weeklySummary.kwLabel : 'Lade...'}
+                {weeklySummary ? weeklySummary.kwLabel.replace(/\.20\d\d/g, '').replace(/\s*-\s*/, '-') : 'Lade...'}
               </span>
               <button
                 className="week-nav-btn"
@@ -762,33 +770,47 @@ export default function ParentControlCenter({
             <div
               style={{
                 display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
+                flexDirection: 'column',
+                gap: '8px',
                 borderBottom: '1px solid rgba(255,255,255,0.06)',
                 paddingBottom: '10px'
               }}
             >
-              <div>
-                <div style={{ fontWeight: 700, fontSize: '1rem' }}>
-                  {selectedUser.avatar_id} {selectedUser.name}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: '1rem' }}>
+                    {selectedUser.avatar_id} {selectedUser.name}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                    Basis-Budget: {selectedUser.weekly_budget_minutes} Min/Woche
+                  </div>
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                  Basis-Budget: {selectedUser.weekly_budget_minutes} Min/Woche
-                </div>
+                <button
+                  className="pill-btn pill-btn-danger"
+                  style={{ padding: '6px 10px', fontSize: '0.75rem' }}
+                  onClick={handleDeleteChild}
+                  title="Kind löschen"
+                >
+                  🗑️
+                </button>
               </div>
-              <div style={{ display: 'flex', gap: '6px' }}>
+
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                 <button
                   className="pill-btn"
-                  style={{ padding: '6px 12px', fontSize: '0.75rem' }}
+                  style={{ padding: '6px 10px', fontSize: '0.74rem', flex: 1, minWidth: '120px', justifyContent: 'center' }}
                   onClick={handleOpenEditUser}
                 >
-                  ✏️ Name/Budget bearbeiten
+                  ✏️ Name/Budget
                 </button>
                 <button
                   className="pill-btn"
                   style={{
-                    padding: '6px 12px',
-                    fontSize: '0.75rem',
+                    padding: '6px 10px',
+                    fontSize: '0.74rem',
+                    flex: 1,
+                    minWidth: '120px',
+                    justifyContent: 'center',
                     background: localStorage.getItem('screentime_child_name') === selectedUser.name ? 'rgba(16, 185, 129, 0.2)' : 'rgba(99, 102, 241, 0.15)',
                     borderColor: localStorage.getItem('screentime_child_name') === selectedUser.name ? '#10b981' : 'var(--accent-blue)',
                     color: localStorage.getItem('screentime_child_name') === selectedUser.name ? '#6ee7b7' : '#fff'
@@ -806,16 +828,8 @@ export default function ParentControlCenter({
                   title="Dieses Smartphone/Tablet fest für dieses Kind einstellen"
                 >
                   {localStorage.getItem('screentime_child_name') === selectedUser.name
-                    ? `📱 Festes Gerät (${selectedUser.name}) ✔️`
-                    : `📱 Gerät fest für ${selectedUser.name} sperren`}
-                </button>
-                <button
-                  className="pill-btn pill-btn-danger"
-                  style={{ padding: '6px 10px', fontSize: '0.75rem' }}
-                  onClick={handleDeleteChild}
-                  title="Kind löschen"
-                >
-                  🗑️
+                    ? `📱 Fest: ${selectedUser.name} ✔️`
+                    : `📱 Als Festgerät sperren`}
                 </button>
               </div>
             </div>
@@ -898,12 +912,14 @@ export default function ParentControlCenter({
                         alignItems: 'center',
                         background: '#12141c',
                         border: '1px solid var(--card-border)',
-                        padding: '8px 12px',
+                        padding: '8px 10px',
                         borderRadius: '10px',
-                        fontSize: '0.78rem'
+                        fontSize: '0.78rem',
+                        flexWrap: 'wrap',
+                        gap: '6px'
                       }}
                     >
-                      <div>
+                      <div style={{ minWidth: '110px', flex: 1 }}>
                         <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span>📱 {c.client_name}</span>
                           <button
@@ -921,7 +937,7 @@ export default function ParentControlCenter({
                           </button>
                         </div>
                         <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                          {c.assigned_user_name ? `Zeigt Cockpit von: ${c.assigned_user_name}` : '🌐 Hauptansicht (Alle Kinder)'}
+                          {c.assigned_user_name ? `Cockpit: ${c.assigned_user_name}` : '🌐 Hauptansicht'}
                         </div>
                       </div>
 
@@ -934,11 +950,12 @@ export default function ParentControlCenter({
                             border: '1px solid var(--card-border)',
                             color: '#fff',
                             borderRadius: '6px',
-                            padding: '4px 8px',
-                            fontSize: '0.75rem'
+                            padding: '4px 6px',
+                            fontSize: '0.72rem',
+                            maxWidth: '135px'
                           }}
                         >
-                          <option value="">🌐 Hauptansicht (Alle)</option>
+                          <option value="">🌐 Alle</option>
                           {users.map((u) => (
                             <option key={u.id} value={u.id}>👦 {u.name}</option>
                           ))}
