@@ -1,8 +1,20 @@
 import express from 'express';
 import { queryAll, queryOne, runSql } from '../db.js';
 import { getUserBalance, getUserDetailedBalance, getWeeklySummary, editDayTime } from '../budget.js';
+import { addClient, broadcastEvent } from '../events.js';
 
 const router = express.Router();
+
+// 0. Realtime Server-Sent Events (SSE) stream for mobile background sync and dashboard live updates
+router.get('/events', (req, res) => {
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive'
+  });
+  res.write('event: connected\ndata: {"status":"connected"}\n\n');
+  addClient(res);
+});
 
 // 1. PIN verification for Parent Control Center
 router.post('/auth/pin', (req, res) => {
@@ -584,6 +596,17 @@ router.post('/sessions/start', async (req, res) => {
       [nowSec, actor_role || 'child', user_id, device_id, details]
     );
 
+    broadcastEvent('session_start', {
+      sessionId: result.lastID,
+      userId: user_id,
+      userName: user ? user.name : 'Kind',
+      deviceId: device_id,
+      deviceName: device.name,
+      durationMinutes: actualMins,
+      remainingSeconds: actualMins * 60,
+      expiresAt
+    });
+
     res.json({
       success: true,
       sessionId: result.lastID,
@@ -615,6 +638,8 @@ router.post('/sessions/pause', async (req, res) => {
       [remainingSec, session_id]
     );
 
+    broadcastEvent('session_pause', { sessionId: session_id });
+
     res.json({ success: true, message: 'Sitzung pausiert', remainingSeconds: remainingSec });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -637,6 +662,12 @@ router.post('/sessions/resume', async (req, res) => {
       `UPDATE active_sessions SET status = 'active', expires_at = ?, remaining_seconds_at_pause = 0 WHERE id = ?`,
       [newExpiresAt, session_id]
     );
+
+    broadcastEvent('session_resume', {
+      sessionId: session_id,
+      expiresAt: newExpiresAt,
+      remainingSeconds: session.remaining_seconds_at_pause
+    });
 
     res.json({ success: true, message: 'Sitzung fortgesetzt', expiresAt: newExpiresAt });
   } catch (err) {
@@ -693,6 +724,8 @@ router.post('/sessions/cancel', async (req, res) => {
         })
       ]
     );
+
+    broadcastEvent('session_cancel', { sessionId: session_id });
 
     res.json({ success: true, usedMinutes, message: `Sitzung gestoppt (${usedMinutes} Min verbucht).` });
   } catch (err) {

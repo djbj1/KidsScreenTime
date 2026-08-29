@@ -1,5 +1,6 @@
 import { queryAll, queryOne, runSql } from './db.js';
 import { getUserBalance, getUserDetailedBalance, toLocalDateStr } from './budget.js';
+import { broadcastEvent } from './events.js';
 
 let watchdogInterval = null;
 
@@ -116,6 +117,14 @@ export const startWatchdog = () => {
            VALUES (?, 'system', ?, ?, 'session_expired', ?)`,
           [nowSec, session.user_id, session.device_id, details]
         );
+
+        broadcastEvent('session_expired', {
+          sessionId: session.id,
+          userId: session.user_id,
+          userName: session.user_name,
+          deviceId: session.device_id,
+          deviceName: session.device_name
+        });
       }
     } catch (err) {
       console.error('Error in Watchdog loop:', err);
