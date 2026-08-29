@@ -586,10 +586,10 @@ export default function ParentControlCenter({
             <table className="weekly-table">
               <thead>
                 <tr>
-                  <th style={{ width: '26%' }}>Tag</th>
-                  <th style={{ width: '34%' }}>Gerät</th>
+                  <th style={{ width: '27%' }}>Tag</th>
+                  <th style={{ width: '31%' }}>Gerät</th>
                   <th style={{ width: '18%', textAlign: 'right' }}>Dauer</th>
-                  <th style={{ width: '22%', textAlign: 'right' }}>Aktion</th>
+                  <th style={{ width: '24%', textAlign: 'right' }}>Aktion</th>
                 </tr>
               </thead>
               <tbody>
@@ -598,12 +598,14 @@ export default function ParentControlCenter({
                     <tr key={row.dateStr} className={row.isToday ? 'highlight-row' : ''}>
                       <td style={{ whiteSpace: 'nowrap' }}>
                         <span className={`day-badge ${row.isToday ? 'active' : ''}`}>{row.dayName}</span>
-                        <span style={{ fontSize: '0.74rem' }}>{row.displayDate.replace(`${row.dayName} `, '')}</span>
+                        <span style={{ fontSize: '0.72rem' }}>
+                          {row.displayDate.replace(`${row.dayName} `, '').replace(/\.20\d\d/, '.')}
+                        </span>
                       </td>
-                      <td style={{ fontSize: '0.72rem', lineHeight: '1.25' }}>
+                      <td style={{ fontSize: '0.7rem', lineHeight: '1.2' }}>
                         {row.device && row.device !== '-' ? (
                           row.device.split(', ').map((d, idx) => (
-                            <div key={idx} style={{ marginBottom: idx > 0 ? '2px' : 0 }}>
+                            <div key={idx} style={{ marginBottom: idx > 0 ? '2px' : 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               <b>{d}</b>
                             </div>
                           ))
@@ -612,14 +614,15 @@ export default function ParentControlCenter({
                         )}
                       </td>
                       <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-                        <b style={{ fontSize: '0.76rem' }}>{row.minutes} Min</b>
+                        <b style={{ fontSize: '0.74rem' }}>{row.minutes} Min</b>
                       </td>
                       <td style={{ textAlign: 'right' }}>
                         <button
                           className="btn-table-edit"
                           onClick={() => handleOpenEditDay(row)}
+                          style={{ padding: '3px 5px', fontSize: '0.66rem' }}
                         >
-                          ✏️ Korrigieren
+                          ✏️ Ändern
                         </button>
                       </td>
                     </tr>

@@ -138,10 +138,13 @@ body {
   background: linear-gradient(135deg, #1e2230 0%, #161824 100%);
   border: 1px solid var(--card-border);
   border-radius: 20px;
-  padding: 16px 20px;
+  padding: 12px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .profile-info {
@@ -449,33 +452,38 @@ body {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .weekly-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   text-align: left;
   table-layout: fixed;
+  box-sizing: border-box;
 }
 
 .weekly-table th {
   background: #141620;
   color: var(--text-muted);
   font-weight: 600;
-  padding: 8px 6px;
+  padding: 8px 4px;
   text-transform: uppercase;
-  font-size: 0.65rem;
-  letter-spacing: 0.4px;
+  font-size: 0.64rem;
+  letter-spacing: 0.3px;
   border-bottom: 1px solid var(--card-border);
+  box-sizing: border-box;
 }
 
 .weekly-table td {
-  padding: 8px 6px;
+  padding: 8px 4px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   color: #e2e8f0;
   vertical-align: middle;
   word-break: break-word;
+  box-sizing: border-box;
 }
 
 .weekly-table tr.highlight-row {
@@ -484,13 +492,13 @@ body {
 
 .day-badge {
   display: inline-block;
-  padding: 2px 5px;
+  padding: 2px 4px;
   border-radius: 5px;
   background: #252836;
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--text-muted);
-  margin-right: 3px;
+  margin-right: 2px;
 }
 
 .day-badge.active {

@@ -85,18 +85,18 @@ export default function ChildDashboard({
           width: '100%',
           flexDirection: 'column',
           alignItems: 'stretch',
-          gap: '16px',
-          padding: '20px'
+          gap: '12px',
+          padding: '12px 10px'
         }}
       >
         {/* Child Profile Info Header */}
         <div className="profile-info" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div className="avatar-circle" style={{ width: '48px', height: '48px', fontSize: '1.4rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div className="avatar-circle" style={{ width: '42px', height: '42px', fontSize: '1.3rem' }}>
               {selectedUser.avatar_id || '👦'}
             </div>
             <div>
-              <div className="profile-name" style={{ fontSize: '1.25rem', fontWeight: 800 }}>{selectedUser.name}</div>
+              <div className="profile-name" style={{ fontSize: '1.15rem', fontWeight: 800 }}>{selectedUser.name}</div>
               <div className="profile-subtitle">Guthaben-Übersicht</div>
             </div>
           </div>
@@ -130,20 +130,20 @@ export default function ChildDashboard({
             justifyContent: 'space-between',
             alignItems: 'center',
             background: 'rgba(0, 0, 0, 0.3)',
-            padding: '14px 20px',
-            borderRadius: '16px',
+            padding: '10px 6px',
+            borderRadius: '14px',
             border: '1px solid rgba(255, 255, 255, 0.08)',
-            gap: '12px'
+            gap: '4px'
           }}
         >
           {/* Woche */}
           <div className="savings-badge" style={{ textAlign: 'center', flex: 1, textTransform: 'none' }}>
-            <div className="savings-title" style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+            <div className="savings-title" style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3px' }}>
               <span>📅</span> <span>Woche</span>
             </div>
-            <div className="savings-value" style={{ color: '#60a5fa', fontSize: '1.25rem', fontWeight: 800, justifyContent: 'center', marginTop: '3px' }}>
+            <div className="savings-value" style={{ color: '#60a5fa', fontSize: '1.15rem', fontWeight: 800, justifyContent: 'center', marginTop: '2px' }}>
               <span>{selectedUser.weeklyBalance !== undefined ? selectedUser.weeklyBalance : currentBalance}</span>
-              <span style={{ fontSize: '0.8rem', marginLeft: '3px' }}>Min</span>
+              <span style={{ fontSize: '0.75rem', marginLeft: '2px' }}>Min</span>
             </div>
           </div>
 
@@ -155,27 +155,27 @@ export default function ChildDashboard({
               flex: 1,
               borderLeft: '1px solid var(--card-border)',
               borderRight: '1px solid var(--card-border)',
-              padding: '0 12px',
+              padding: '0 4px',
               textTransform: 'none'
             }}
           >
-            <div className="savings-title" style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+            <div className="savings-title" style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3px' }}>
               <span>🎁</span> <span>Bonus</span>
             </div>
-            <div className="savings-value" style={{ color: '#f59e0b', fontSize: '1.25rem', fontWeight: 800, justifyContent: 'center', marginTop: '3px' }}>
+            <div className="savings-value" style={{ color: '#f59e0b', fontSize: '1.15rem', fontWeight: 800, justifyContent: 'center', marginTop: '2px' }}>
               <span>{selectedUser.bonusBalance !== undefined ? selectedUser.bonusBalance : 0}</span>
-              <span style={{ fontSize: '0.8rem', marginLeft: '3px' }}>Min</span>
+              <span style={{ fontSize: '0.75rem', marginLeft: '2px' }}>Min</span>
             </div>
           </div>
 
           {/* Gesamt */}
           <div className="savings-badge" style={{ textAlign: 'center', flex: 1, textTransform: 'none' }}>
-            <div className="savings-title" style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+            <div className="savings-title" style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3px' }}>
               <span>🐷</span> <span>Gesamt</span>
             </div>
-            <div className="savings-value" style={{ color: 'var(--accent-gold)', fontSize: '1.35rem', fontWeight: 800, justifyContent: 'center', marginTop: '3px' }}>
+            <div className="savings-value" style={{ color: 'var(--accent-gold)', fontSize: '1.25rem', fontWeight: 800, justifyContent: 'center', marginTop: '2px' }}>
               <span>{selectedUser.totalBalance !== undefined ? selectedUser.totalBalance : currentBalance}</span>
-              <span style={{ fontSize: '0.85rem', marginLeft: '3px' }}>Min</span>
+              <span style={{ fontSize: '0.78rem', marginLeft: '2px' }}>Min</span>
             </div>
           </div>
         </div>
@@ -247,7 +247,7 @@ export default function ChildDashboard({
               ◀
             </button>
             <span className="week-kw-badge">
-              {weeklySummary ? weeklySummary.kwLabel : 'Lade...'}
+              {weeklySummary ? weeklySummary.kwLabel.replace(/\.20\d\d/g, '').replace(/\s*-\s*/, '-') : 'Lade...'}
             </span>
             <button
               className="week-nav-btn"
@@ -271,10 +271,10 @@ export default function ChildDashboard({
           <table className="weekly-table">
             <thead>
               <tr>
-                <th style={{ width: '26%' }}>Tag</th>
-                <th style={{ width: '34%' }}>Gerät</th>
+                <th style={{ width: '27%' }}>Tag</th>
+                <th style={{ width: '31%' }}>Gerät</th>
                 <th style={{ width: '18%', textAlign: 'right' }}>Dauer</th>
-                <th style={{ width: '22%', textAlign: 'right' }}>Status</th>
+                <th style={{ width: '24%', textAlign: 'right' }}>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -283,12 +283,14 @@ export default function ChildDashboard({
                   <tr key={row.dateStr} className={row.isToday ? 'highlight-row' : ''}>
                     <td style={{ whiteSpace: 'nowrap' }}>
                       <span className={`day-badge ${row.isToday ? 'active' : ''}`}>{row.dayName}</span>
-                      <span style={{ fontSize: '0.74rem' }}>{row.displayDate.replace(`${row.dayName} `, '')}</span>
+                      <span style={{ fontSize: '0.72rem' }}>
+                        {row.displayDate.replace(`${row.dayName} `, '').replace(/\.20\d\d/, '.')}
+                      </span>
                     </td>
-                    <td style={{ fontSize: '0.72rem', lineHeight: '1.25' }}>
+                    <td style={{ fontSize: '0.7rem', lineHeight: '1.2' }}>
                       {row.device && row.device !== '-' ? (
                         row.device.split(', ').map((d, idx) => (
-                          <div key={idx} style={{ marginBottom: idx > 0 ? '2px' : 0 }}>
+                          <div key={idx} style={{ marginBottom: idx > 0 ? '2px' : 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {d}
                           </div>
                         ))
@@ -297,10 +299,11 @@ export default function ChildDashboard({
                       )}
                     </td>
                     <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-                      <b style={{ fontSize: '0.76rem' }}>{row.minutes} Min</b>
+                      <b style={{ fontSize: '0.74rem' }}>{row.minutes} Min</b>
                     </td>
-                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap', fontSize: '0.72rem' }}>
-                      <span className={`status-dot ${row.statusColor}`} /> {row.status}
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap', fontSize: '0.68rem' }}>
+                      <span className={`status-dot ${row.statusColor}`} />
+                      {row.status === 'Läuft gerade' ? 'Aktiv' : row.status === 'Abgeschlossen' ? 'Fertig' : row.status === 'Pausiert' ? 'Pause' : row.status}
                     </td>
                   </tr>
                 ))
