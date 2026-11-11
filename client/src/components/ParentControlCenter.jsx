@@ -594,8 +594,8 @@ export default function ParentControlCenter({
             <table className="weekly-table">
               <thead>
                 <tr>
-                  <th style={{ width: '27%' }}>Tag</th>
-                  <th style={{ width: '31%' }}>Gerät</th>
+                  <th style={{ width: '25%' }}>Tag</th>
+                  <th style={{ width: '33%' }}>Gerät</th>
                   <th style={{ width: '18%', textAlign: 'right' }}>Dauer</th>
                   <th style={{ width: '24%', textAlign: 'right' }}>Aktion</th>
                 </tr>
@@ -606,8 +606,8 @@ export default function ParentControlCenter({
                     <tr key={row.dateStr} className={row.isToday ? 'highlight-row' : ''}>
                       <td style={{ whiteSpace: 'nowrap' }}>
                         <span className={`day-badge ${row.isToday ? 'active' : ''}`}>{row.dayName}</span>
-                        <span style={{ fontSize: '0.72rem' }}>
-                          {row.displayDate.replace(`${row.dayName} `, '').replace(/\.20\d\d/, '.')}
+                        <span style={{ fontSize: '0.72rem', marginLeft: '4px' }}>
+                          {row.displayDate ? row.displayDate.replace(`${row.dayName} `, '').replace(/\.20\d\d/, '.') : ''}
                         </span>
                       </td>
                       <td style={{ fontSize: '0.7rem', lineHeight: '1.2' }}>

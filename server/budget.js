@@ -8,13 +8,21 @@ export const toLocalDateStr = (d = new Date()) => {
   return `${year}-${month}-${day}`;
 };
 
+// Get Monday date string (YYYY-MM-DD) for any given local date string (YYYY-MM-DD)
+export const getWeekMondayStr = (dateStr) => {
+  if (!dateStr || !dateStr.includes('-')) return dateStr;
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const d = new Date(year, month - 1, day);
+  const dayOfWeek = d.getDay(); // 0 = Sunday, 1 = Monday, ...
+  const distanceToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  d.setDate(d.getDate() + distanceToMonday);
+  return toLocalDateStr(d);
+};
+
 // Calculate current total balance for a user from user_ledgers
 export const getUserBalance = async (userId) => {
-  const result = await queryOne(
-    `SELECT SUM(amount_minutes) as total FROM user_ledgers WHERE user_id = ?`,
-    [userId]
-  );
-  return result && result.total !== null ? result.total : 0;
+  const detailed = await getUserDetailedBalance(userId);
+  return detailed.totalBalance;
 };
 
 // Calculate detailed balances for a user (totalBalance, weeklyBalance, bonusBalance, weekUsed)
@@ -34,7 +42,7 @@ export const getUserDetailedBalance = async (userId, weekOffset = 0) => {
   if (selectedDateStrs.length > 0) {
     const placeholders = selectedDateStrs.map(() => '?').join(',');
     const entries = await queryAll(
-      `SELECT amount_minutes, type FROM user_ledgers WHERE user_id = ? AND date_str IN (${placeholders})`,
+      `SELECT amount_minutes, type, note FROM user_ledgers WHERE user_id = ? AND date_str IN (${placeholders})`,
       [userId, ...selectedDateStrs]
     );
     for (const entry of entries) {
@@ -48,12 +56,17 @@ export const getUserDetailedBalance = async (userId, weekOffset = 0) => {
   weekUsed = Math.max(0, weekUsed);
   const weeklyBalance = Math.max(0, weeklyBudget - weekUsed);
 
-  // 2. Calculate bonus balance strictly from 'bonus' ledger entries
+  // 2. Calculate bonus balance:
+  // Total bonus granted strictly from 'bonus' ledger entries
   const bonusResult = await queryOne(
     `SELECT SUM(amount_minutes) as bonusTotal FROM user_ledgers WHERE user_id = ? AND type = 'bonus'`,
     [userId]
   );
-  const bonusBalance = Math.max(0, bonusResult && bonusResult.bonusTotal !== null ? bonusResult.bonusTotal : 0);
+  const totalBonusGranted = Math.max(0, bonusResult && bonusResult.bonusTotal !== null ? bonusResult.bonusTotal : 0);
+
+  // Calculate excess usage over weekly budget for the selected week to deduct from bonus
+  const weekExcessUsage = Math.max(0, weekUsed - weeklyBudget);
+  const bonusBalance = Math.max(0, totalBonusGranted - weekExcessUsage);
 
   // 3. Total balance is total available minutes
   const totalBalance = weeklyBalance + bonusBalance;
@@ -199,7 +212,7 @@ export const getWeeklySummary = async (userId, weekOffset = 0) => {
     summaryRows.push({
       dateStr: day.dateStr,
       dayName: day.dayName,
-      displayDate: day.displayDate + (day.isToday ? ' (Heute)' : ''),
+      displayDate: day.displayDate,
       isToday: day.isToday,
       device: deviceNames.length > 0 ? deviceNames.join(', ') : '-',
       minutes: dayUsedMinutes,

@@ -18,4 +18,15 @@ public class MainActivity extends BridgeActivity {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onDestroy() {
+        try {
+            Intent syncIntent = new Intent(this, BackgroundSyncService.class);
+            stopService(syncIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onDestroy();
+    }
 }

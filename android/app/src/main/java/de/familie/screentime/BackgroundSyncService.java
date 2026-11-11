@@ -44,7 +44,19 @@ public class BackgroundSyncService extends Service {
             syncThread.start();
         }
 
-        return START_STICKY;
+        return START_NOT_STICKY;
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Log.i(TAG, "App swiped away/closed by user. Stopping background sync.");
+        isRunning = false;
+        if (syncThread != null) {
+            syncThread.interrupt();
+        }
+        stopForeground(true);
+        stopSelf();
+        super.onTaskRemoved(rootIntent);
     }
 
     @Override
@@ -53,6 +65,7 @@ public class BackgroundSyncService extends Service {
         if (syncThread != null) {
             syncThread.interrupt();
         }
+        stopForeground(true);
         super.onDestroy();
     }
 
@@ -88,7 +101,7 @@ public class BackgroundSyncService extends Service {
         return new NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("ScreenTime Wächter aktiv")
             .setContentText("Hintergrund-Synchronisation mit dem Heimnetzwerk aktiv")
-            .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
@@ -258,14 +271,13 @@ public class BackgroundSyncService extends Service {
             }
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, receiverIntent, flags);
 
-            Intent showIntent = new Intent(context, MainActivity.class);
-            showIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent showPendingIntent = PendingIntent.getActivity(context, requestCode + 10000, showIntent, flags);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMs, pendingIntent);
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerAtMs, pendingIntent);
+            }
 
-            AlarmManager.AlarmClockInfo clockInfo = new AlarmManager.AlarmClockInfo(triggerAtMs, showPendingIntent);
-            alarmManager.setAlarmClock(clockInfo, pendingIntent);
-
-            Log.i(TAG, "BackgroundSyncService scheduled setAlarmClock for session #" + sessionId + " at ms: " + triggerAtMs);
+            Log.i(TAG, "BackgroundSyncService scheduled exact alarm for session #" + sessionId + " at ms: " + triggerAtMs);
         } catch (Exception e) {
             Log.e(TAG, "Error in BackgroundSyncService scheduleAlarm: " + e.getMessage(), e);
         }

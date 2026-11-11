@@ -54,16 +54,14 @@ public class ScreenTimeAlarmPlugin extends Plugin {
             }
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, receiverIntent, flags);
 
-            // 2. ShowIntent for AlarmClockInfo (tapping clock in system UI launches app)
-            Intent showIntent = new Intent(context, MainActivity.class);
-            showIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent showPendingIntent = PendingIntent.getActivity(context, requestCode + 10000, showIntent, flags);
+            // 2. Schedule via AlarmManager.setExactAndAllowWhileIdle (exact timer without showing system alarm clock icon)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMs, pendingIntent);
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerAtMs, pendingIntent);
+            }
 
-            // 3. Schedule via AlarmManager.setAlarmClock (exact, highest priority, bypasses Doze)
-            AlarmManager.AlarmClockInfo clockInfo = new AlarmManager.AlarmClockInfo(triggerAtMs, showPendingIntent);
-            alarmManager.setAlarmClock(clockInfo, pendingIntent);
-
-            Log.i(TAG, "Scheduled native setAlarmClock for session #" + sessionId + " (" + childName + ") at ms: " + triggerAtMs);
+            Log.i(TAG, "Scheduled native exact alarm for session #" + sessionId + " (" + childName + ") at ms: " + triggerAtMs);
 
             JSObject res = new JSObject();
             res.put("success", true);

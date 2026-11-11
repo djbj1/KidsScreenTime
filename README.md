@@ -10,23 +10,11 @@
 
 ---
 
-## 📸 Screenshots & Ansichten
+## 📸 Screenshots & Benutzeroberfläche
 
-### 📱 Smartphone-Ansichten (Mobile App)
-
-| 👦 Kinder-Dashboard (Timer & Guthaben) | 🛡️ Eltern-Kontrollzentrum (Live-Monitor & Korrektur) |
+| 👦 Kind-Ansicht (Cockpit & Zeiten) | 🛡️ Eltern-Bereich (Kontrollzentrum & Korrektur) |
 | :---: | :---: |
-| <img src="doc/images/mobile_child_view.jpg" alt="Kinder-Dashboard Smartphone" width="340" /> | <img src="doc/images/mobile_parent_view.jpg" alt="Eltern-Kontrollzentrum Smartphone" width="340" /> |
-
-### 💻 Multi-Device & Desktop-Ansichten
-
-<p align="center">
-  <img src="doc/images/multi_device_overview.jpg" alt="KidsScreenTime Multi-Device Übersicht" width="90%" />
-</p>
-
-| 💻 Kinder-Cockpit (Notebook / Tablet) | 🛡️ Eltern-Zentrale (Desktop / Browser) |
-| :---: | :---: |
-| <img src="doc/images/child_dashboard_laptop.jpg" alt="Kinder-Dashboard Desktop" width="460" /> | <img src="doc/images/parent_control_desktop.jpg" alt="Eltern-Zentrale Desktop" width="460" /> |
+| <img src="doc/images/screenshot_child.png" alt="Kind-Ansicht Dashboard" width="380" /> | <img src="doc/images/screenshot_parent.png" alt="Eltern-Kontrollzentrum" width="380" /> |
 
 ---
 
